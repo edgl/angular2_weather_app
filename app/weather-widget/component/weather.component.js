@@ -10,17 +10,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var weather_service_1 = require('../service/weather.service');
+var weather_1 = require('../model/weather');
 var WeatherComponent = (function () {
     function WeatherComponent(service) {
-        var _this = this;
         this.service = service;
+        this.weatherData = new weather_1.Weather(null, null, null, null, null);
+    }
+    WeatherComponent.prototype.ngOnInit = function () {
+        this.getWeatherByCurrentLocation();
+    };
+    WeatherComponent.prototype.getWeatherByCurrentLocation = function () {
+        var _this = this;
         this.service.getCurrentLocation()
             .subscribe(function (position) {
-            var pos = [position.coords.latitude, position.coords.longitude];
-            _this.service.getCurrentWeather(pos[0], pos[0])
-                .subscribe(function (weather) { return console.log(weather); }, function (error) { return console.error(error); });
+            _this.pos = position;
+            _this.getCurrentWeather();
         }, function (err) { return console.error(err); });
-    }
+    };
+    WeatherComponent.prototype.getCurrentWeather = function () {
+        var _this = this;
+        this.service.getCurrentWeather(this.pos.coords.latitude, this.pos.coords.longitude)
+            .subscribe(function (weather) {
+            _this.weatherData.temp = weather["currently"]["temperature"];
+            _this.weatherData.wind = weather["currently"]["windSpeed"];
+            _this.weatherData.humidity = weather["currently"]["humidity"];
+            _this.weatherData.icon = weather["currently"]["icon"];
+            _this.weatherData.summary = weather["currently"]["summary"];
+            console.log("Weather: ", _this.weatherData);
+        }, function (error) { return console.error(error); });
+    };
     WeatherComponent = __decorate([
         core_1.Component({
             moduleId: module.id,

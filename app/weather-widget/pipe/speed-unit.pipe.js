@@ -9,23 +9,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var platform_browser_1 = require('@angular/platform-browser');
-var http_1 = require('@angular/http');
-var app_component_1 = require('./app.component');
-var weather_component_1 = require('./weather-widget/component/weather.component');
-var speed_unit_pipe_1 = require('./weather-widget/pipe/speed-unit.pipe');
-var AppModule = (function () {
-    function AppModule() {
+var SpeedUnitPipe = (function () {
+    function SpeedUnitPipe() {
     }
-    AppModule = __decorate([
-        core_1.NgModule({
-            imports: [platform_browser_1.BrowserModule, http_1.JsonpModule],
-            declarations: [app_component_1.AppComponent, weather_component_1.WeatherComponent, speed_unit_pipe_1.SpeedUnitPipe],
-            bootstrap: [app_component_1.AppComponent]
+    SpeedUnitPipe.prototype.transform = function (speed, unitType) {
+        switch (unitType) {
+            case "mph":
+                var miles = speed * 1.6;
+                return miles + "kph";
+            default:
+                var kph = speed / 1.6;
+                return kph + "mph";
+        }
+    };
+    SpeedUnitPipe = __decorate([
+        core_1.Pipe({
+            name: 'speedUnit'
         }), 
         __metadata('design:paramtypes', [])
-    ], AppModule);
-    return AppModule;
+    ], SpeedUnitPipe);
+    return SpeedUnitPipe;
 }());
-exports.AppModule = AppModule;
-//# sourceMappingURL=app.module.js.map
+exports.SpeedUnitPipe = SpeedUnitPipe;
+//# sourceMappingURL=speed-unit.pipe.js.map
