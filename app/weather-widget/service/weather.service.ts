@@ -9,31 +9,31 @@ import 'rxjs/add/operator/catch';
 export class WeatherService {
     constructor(private jsonp: Jsonp) { }
 
-    getCurrentLocation(): [number,number] {
-        if(navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(pos => {
-                console.log("Position: ", pos.coords.latitude, ", ", pos.coords.longitude); // TODO: REMOVE
-                return [pos.coords.latitude, pos.coords.longitude];
-            },
-            err => {
-                console.error("Unable to get position - ", err.message);
+    getCurrentLocation(): Observable<any> {
+        if (navigator.geolocation) {
+            return Observable.create(observer => {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    observer.next(pos);
+                }),
+                    err => {
+                        return Observable.throw(err);
+                    }
             });
         } else {
-            console.error("Geolocation is not available");
-            return [0,0];
+            return Observable.throw("Geolocation is not available");
         }
     }
 
     getCurrentWeather(lat: number, long: number): Observable<any> {
         const URL = FORECAST_ROOT + FORECAST_KEY + "/" + lat + "," + long;
         const queryParams = "?callback=JSONP_CALLBACK";
-        
+
         return this.jsonp.get(URL + queryParams)
             .map(data => data.json())
             .catch(err => {
                 console.error("Error getting results from weather - ", err);
                 return Observable.throw(err.json())
-            })
+            });
     }
-    
- }
+
+}

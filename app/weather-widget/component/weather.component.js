@@ -12,10 +12,14 @@ var core_1 = require('@angular/core');
 var weather_service_1 = require('../service/weather.service');
 var WeatherComponent = (function () {
     function WeatherComponent(service) {
+        var _this = this;
         this.service = service;
-        this.service.getCurrentLocation();
-        this.service.getCurrentWeather(0, 0)
-            .subscribe(function (weather) { return console.log(weather); }, function (error) { return console.error(error); });
+        this.service.getCurrentLocation()
+            .subscribe(function (position) {
+            var pos = [position.coords.latitude, position.coords.longitude];
+            _this.service.getCurrentWeather(pos[0], pos[0])
+                .subscribe(function (weather) { return console.log(weather); }, function (error) { return console.error(error); });
+        }, function (err) { return console.error(err); });
     }
     WeatherComponent = __decorate([
         core_1.Component({
