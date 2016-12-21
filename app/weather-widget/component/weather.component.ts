@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WeatherService } from '../service/weather.service';
 import { Weather } from '../model/weather';
+import { Location } from '../model/location';
 
 @Component({
     moduleId: module.id,
@@ -14,6 +15,10 @@ export class WeatherComponent implements OnInit {
 
     pos: Position;
     weatherData = new Weather(null, null, null, null, null);
+    location = new Location(null, null);
+    currentSpeedUnit = "kph";
+    currentTempUnit = "F";
+    locationName: string = null;
 
     constructor(private service: WeatherService) { }
 
@@ -26,6 +31,7 @@ export class WeatherComponent implements OnInit {
             .subscribe(position => {
                 this.pos = position;
                 this.getCurrentWeather();
+                this.getLocationName();
             },
             err => console.error(err));
     }
@@ -41,5 +47,37 @@ export class WeatherComponent implements OnInit {
                 console.log("Weather: ", this.weatherData);
             },
             error => console.error(error));
+    }
+
+    getLocationName() {
+        this.service.getLocationName(this.pos.coords.latitude, this.pos.coords.longitude)
+            .subscribe(loc => {
+                this.location.city = loc["results"][0]["address_components"][2]["short_name"];
+                this.location.state = loc["results"][0]["address_components"][5]["short_name"];
+                                    
+                console.log("Location Name: " + this.location); 
+            },      
+            err => console.error(err));
+    }
+
+    toggleUnit() {
+        this.toggleSpeedUnits();
+        this.toggleTempUnits();
+    }
+
+    toggleSpeedUnits() {
+        if(this.currentTempUnit == "F") {
+            this.currentTempUnit = "C";
+        } else {
+            this.currentTempUnit = "F";
+        }
+    }
+
+    toggleTempUnits() {
+        if(this.currentSpeedUnit == "kph") {
+            this.currentSpeedUnit = "mph";
+        } else {
+            this.currentSpeedUnit = "kph";
+        }
     }
 }

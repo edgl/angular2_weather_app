@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
-import { FORECAST_KEY, FORECAST_ROOT } from '../constants/constants';
-import { Jsonp } from '@angular/http';
+import { Jsonp, Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
+import { FORECAST_KEY, FORECAST_ROOT, MAP_API_KEY, MAP_API_ROOT } from '../constants/constants';
+
 @Injectable()
 export class WeatherService {
-    constructor(private jsonp: Jsonp) { }
+    constructor(private jsonp: Jsonp, private http: Http) { }
 
     getCurrentLocation(): Observable<any> {
         if (navigator.geolocation) {
@@ -33,6 +35,18 @@ export class WeatherService {
             .catch(err => {
                 console.error("Error getting results from weather - ", err);
                 return Observable.throw(err.json())
+            });
+    }
+
+    getLocationName(lat: number, long: number): Observable<any> {
+        const URL = MAP_API_ROOT;
+        const QUERY_PARAMS = "?latlng=" + lat + "," + long + "&key=" + MAP_API_KEY;
+
+        return this.http.get(URL + QUERY_PARAMS)
+            .map(resp => resp.json())
+            .catch(err => {
+                console.error("Cannot get location name - ", err);
+                return Observable.throw(err.json());
             });
     }
 

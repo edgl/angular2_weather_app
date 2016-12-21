@@ -9,14 +9,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var constants_1 = require('../constants/constants');
 var http_1 = require('@angular/http');
 var Observable_1 = require('rxjs/Observable');
 require('rxjs/add/operator/map');
 require('rxjs/add/operator/catch');
+var constants_1 = require('../constants/constants');
 var WeatherService = (function () {
-    function WeatherService(jsonp) {
+    function WeatherService(jsonp, http) {
         this.jsonp = jsonp;
+        this.http = http;
     }
     WeatherService.prototype.getCurrentLocation = function () {
         if (navigator.geolocation) {
@@ -43,9 +44,19 @@ var WeatherService = (function () {
             return Observable_1.Observable.throw(err.json());
         });
     };
+    WeatherService.prototype.getLocationName = function (lat, long) {
+        var URL = constants_1.MAP_API_ROOT;
+        var QUERY_PARAMS = "?latlng=" + lat + "," + long + "&key=" + constants_1.MAP_API_KEY;
+        return this.http.get(URL + QUERY_PARAMS)
+            .map(function (resp) { return resp.json(); })
+            .catch(function (err) {
+            console.error("Cannot get location name - ", err);
+            return Observable_1.Observable.throw(err.json());
+        });
+    };
     WeatherService = __decorate([
         core_1.Injectable(), 
-        __metadata('design:paramtypes', [http_1.Jsonp])
+        __metadata('design:paramtypes', [http_1.Jsonp, http_1.Http])
     ], WeatherService);
     return WeatherService;
 }());
