@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" (click)="toggleUnits()">
     <div class="card-header">
         <div class="col-xs-8">
             <p>{{ location.city }}, {{ location.state }}</p>
@@ -8,13 +8,13 @@
         </div>
     </div>
     <div class="card-block">
-        <h1>0</h1>
+        <canvas id="icon"></canvas>
         <p>{{ weatherData.summary }}</p>
     </div>
     <div class="card-footer">
         <div class="col-xs-5">
             <p>Wind</p>
-            <p>{{ weatherData.wind | number: '.0-2' | speedUnit: currentSpeedUnit }}</p>
+            <p>{{ weatherData.wind | number: '.0-0' | speedUnit: currentSpeedUnit }}</p>
         </div>
         <div class="col-xs-5 offset-xs-2">
             <p>Humidity</p>

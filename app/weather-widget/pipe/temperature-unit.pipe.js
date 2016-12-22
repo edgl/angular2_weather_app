@@ -14,8 +14,8 @@ var TemperatureUnitPipe = (function () {
     }
     TemperatureUnitPipe.prototype.transform = function (temp, unitType) {
         switch (unitType) {
-            case "C":
-                return temp * 9 / 5 + 32;
+            case "F":
+                return (temp - 32) / 1.8;
             default:
                 return temp;
         }

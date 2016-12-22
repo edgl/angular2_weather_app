@@ -12,14 +12,16 @@ var core_1 = require('@angular/core');
 var weather_service_1 = require('../service/weather.service');
 var weather_1 = require('../model/weather');
 var location_1 = require('../model/location');
+// have typescript def for Skycons js library
 var WeatherComponent = (function () {
     function WeatherComponent(service) {
         this.service = service;
         this.weatherData = new weather_1.Weather(null, null, null, null, null);
         this.location = new location_1.Location(null, null);
         this.currentSpeedUnit = "kph";
-        this.currentTempUnit = "F";
+        this.currentTempUnit = "C";
         this.locationName = null;
+        this.icons = new Skycons({ "color": "#FFF" });
     }
     WeatherComponent.prototype.ngOnInit = function () {
         this.getWeatherByCurrentLocation();
@@ -43,6 +45,7 @@ var WeatherComponent = (function () {
             _this.weatherData.icon = weather["currently"]["icon"];
             _this.weatherData.summary = weather["currently"]["summary"];
             console.log("Weather: ", _this.weatherData);
+            _this.setIcon();
         }, function (error) { return console.error(error); });
     };
     WeatherComponent.prototype.getLocationName = function () {
@@ -54,7 +57,7 @@ var WeatherComponent = (function () {
             console.log("Location Name: " + _this.location);
         }, function (err) { return console.error(err); });
     };
-    WeatherComponent.prototype.toggleUnit = function () {
+    WeatherComponent.prototype.toggleUnits = function () {
         this.toggleSpeedUnits();
         this.toggleTempUnits();
     };
@@ -74,7 +77,12 @@ var WeatherComponent = (function () {
             this.currentSpeedUnit = "kph";
         }
     };
+    WeatherComponent.prototype.setIcon = function () {
+        this.icons.add("icon", this.weatherData.icon);
+        this.icons.play();
+    };
     WeatherComponent = __decorate([
+        // workaround because we don't 
         core_1.Component({
             moduleId: module.id,
             selector: 'weather-widget',
