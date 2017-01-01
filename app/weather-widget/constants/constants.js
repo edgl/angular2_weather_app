@@ -46,7 +46,7 @@ exports.WEATHER_COLORS = {
     },
     'partly-cloudy-night': {
         'background-color': '#34495E',
-        'color': '#000'
+        'color': '#FFF'
     }
 };
 //# sourceMappingURL=constants.js.map

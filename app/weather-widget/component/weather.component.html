@@ -1,7 +1,7 @@
 <div class="card" (click)="toggleUnits()" [ngStyle]="setStyles()">
     <div class="card-header" [class.invisible]="!dataReceived">
-        <div class="col-xs-8">
-            <p>{{ location.city }}, {{ location.state }}</p>
+        <div class="col-xs-8" id="location-wrapper">
+            <p><i id="location-icon" class="fa fa-map-marker" aria-hidden="true"></i>{{ location.city }}, {{ location.state }}</p>
         </div>
         <div class="col-xs-4 text-xs-right">
             <h1>{{ weatherData.temp | tempUnit: currentTempUnit | number: '.0-0' }}&deg;</h1>
@@ -11,18 +11,23 @@
         <div id="indicator" [hidden]="dataReceived">
             <i class="fa fa-circle-o-notch fa-spin fa-4x fa-fw"></i>
             <span class="sr-only">Loading...</span>
-        </div> 
+        </div>
         <canvas id="icon" [hidden]="!dataReceived"></canvas>
         <p>{{ weatherData.summary }}</p>
     </div>
     <div class="card-footer" [class.invisible]="!dataReceived">
-        <div class="col-xs-5">
-            <p>Wind</p>
-            <p>{{ weatherData.wind | number: '.0-0' | speedUnit: currentSpeedUnit }}</p>
+        <div class="row" id="detail-row">
+            <div class="col-xs-5">
+                <p>Wind</p>
+                <p class="unit-label">{{ weatherData.wind | number: '.0-0' | speedUnit: currentSpeedUnit }}</p>
+            </div>
+            <div class="col-xs-5 offset-xs-2">
+                <p>Humidity</p>
+                <p class="unit-label">{{ weatherData.humidity | percent }}</p>
+            </div>
         </div>
-        <div class="col-xs-5 offset-xs-2">
-            <p>Humidity</p>
-            <p>{{ weatherData.humidity | percent }}</p>
+        <div class="row" id="helper-row">
+            <small class="text-muted">click to switch between &deg;f/kph and &deg;c/mph</small>
         </div>
     </div>
 </div>
